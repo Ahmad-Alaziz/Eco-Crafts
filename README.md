@@ -1,12 +1,10 @@
-# <!-- Begin: Full Name -->Project Nexus Pre-Launch App<!-- End: Full Name -->
+# <!-- Begin: Full Name -->Hack Yeah Crafting App<!-- End: Full Name -->
 
 ### Purpose
 
 <!-- Begin: Purpose -->
 
-The Purpose of this app is to obtain an initial base of users and create a Buzz even before our primary App launches.
-It will also create a seemless transition into our primary App.
-
+The Purpose of this app is to ...
 <!-- End: Purpose -->
 
 ## How to use this repository
