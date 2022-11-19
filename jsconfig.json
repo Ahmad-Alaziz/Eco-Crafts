@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "baseUrl": ".",
+    "paths": {
+      "@images": ["assets/images"],
+      "@fontAssets": ["assets/fonts"],
+      "@lottie": ["assets/lottie"],
+      "@colors": ["app/theme/colors"],
+      "@fonts": ["app/theme/fonts/"],
+      "@consts": ["app/consts/"],
+      "@routeNames": ["app/navigation/routes/routeNames"],
+      "@screens": ["app/screens/"],
+      "app/*": ["app/*"]
+    }
+  },
+  "exclude": ["node_modules"]
+}
