@@ -23,6 +23,7 @@ const OnboardingScreen = ({ navigation }) => {
       titleStyles={styles.title}
       subTitleStyles={styles.subTitle}
       onDone={completeOnBoarding}
+      onSkip={completeOnBoarding}
       pages={[
         {
           backgroundColor: colors.primary,
@@ -85,8 +86,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   lottieContainer: {
-    width: 200,
-    height: 200,
+    width: 220,
+    height: 220,
   },
 });
 

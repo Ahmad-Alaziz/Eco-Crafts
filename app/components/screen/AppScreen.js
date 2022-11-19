@@ -1,6 +1,7 @@
 import { colors } from '@colors';
 import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 const AppScreen = ({ children, style, wave }) => {
   return (
     <>

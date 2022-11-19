@@ -1,7 +1,7 @@
 import { colors } from '@colors';
 import { createStackNavigator } from '@react-navigation/stack';
 import routeNames from '@routeNames';
-import { LoginScreen, WelcomeScreen, SignupScreen } from '@screens';
+import { WelcomeScreen } from '@screens';
 import { FONT_TYPES } from 'app/theme/fonts';
 import React from 'react';
 

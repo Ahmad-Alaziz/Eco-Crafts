@@ -36,7 +36,7 @@ function AppText({
       style={[
         styles.text,
         { color },
-        huge && { fontSize: scale(55) },
+        huge && { fontSize: scale(65) },
         h1 && { fontSize: scale(25) },
         h2 && { fontSize: scale(20) },
         h3 && { fontSize: scale(14) },
