@@ -6,9 +6,21 @@ import AppPicker from 'app/components/AppPicker';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import SHOPPING_LOTTIE from '@lottie/shopping.json';
+import RECYCLING_LOTTIE from '@lottie/recycling.json';
 
-import { FlatList, ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  FlatList,
+  ImageBackground,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import AnimatedLottieView from 'lottie-react-native';
+import ShopWiselyScreen from './ShopWiselyScreen';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const startItems = [
   {
@@ -49,7 +61,7 @@ const startItems = [
 
 const tips = [
   { id: 0, title: 'Shop Wisely!' },
-  { id: 1, title: ' Go to Zero Waste!' },
+  { id: 1, title: 'Recycling 101' },
 ];
 const DashboardScreen = ({ navigation }) => {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -69,85 +81,119 @@ const DashboardScreen = ({ navigation }) => {
     setObjects(newState);
   };
 
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
-    <AppScreen notPadded style={{ backgroundColor: colors.white }}>
-      <View style={styles.cardContainer}>
-        <ImageBackground
-          source={require('../../../assets/images/overlays/overlay.png')}
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-            opacity: 0.15,
-            overflow: 'hidden',
-          }}
-        />
-        <AppText big bold text="Generate Craft" />
-        <AppText
-          h4
-          light
-          style={{ marginVertical: 10 }}
-          text="Pick whatever materials you have laying around your house and our magical generator will come up with a fascinating DIY project for you to enjoy!"
-        />
-        <View style={{ width: 300, alignItems: 'center' }}>
-          <View style={{ marginVertical: 10 }}>
-            <AppPicker
-              onSelectItem={(item) => {
-                if (item.quantity > 0) {
-                  updateState(selectedItems, setSelectedItems, item.id);
-                } else {
-                  const newItem = { ...item, quantity: item.quantity + 1 };
-                  setSelectedItems([...selectedItems, newItem]);
-                }
+    <>
+      <AppScreen notPadded style={{ backgroundColor: colors.white }}>
+        <View style={styles.cardContainer}>
+          <ImageBackground
+            source={require('../../../assets/images/overlays/overlay.png')}
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              opacity: 0.15,
+              overflow: 'hidden',
+            }}
+          />
+          <AppText big bold text="Generate Craft" />
+          <AppText
+            h4
+            light
+            style={{ marginVertical: 10 }}
+            text="Pick whatever materials you have laying around your house and our magical generator will come up with a fascinating DIY project for you to enjoy!"
+          />
+          <View style={{ width: 300, alignItems: 'center' }}>
+            <View style={{ marginVertical: 10 }}>
+              <AppPicker
+                onSelectItem={(item) => {
+                  if (item.quantity > 0) {
+                    updateState(selectedItems, setSelectedItems, item.id);
+                  } else {
+                    const newItem = { ...item, quantity: item.quantity + 1 };
+                    setSelectedItems([...selectedItems, newItem]);
+                  }
 
-                updateState(items, setItems, item.id);
-              }}
-              placeholder="Choose Materials"
-              selectedItems={selectedItems}
-              items={items}
-            />
+                  updateState(items, setItems, item.id);
+                }}
+                placeholder="Choose Materials"
+                selectedItems={selectedItems}
+                items={items}
+              />
+            </View>
           </View>
+          <AppButton
+            text="Generate!"
+            color={colors.lightGreen}
+            style={{ width: 250, position: 'absolute', bottom: 20, left: 60 }}
+          />
         </View>
-        <AppButton
-          text="Generate!"
-          color={colors.lightGreen}
-          style={{ width: 250, position: 'absolute', bottom: 20, left: 60 }}
-        />
-      </View>
-      <View style={{ flex: 0.9, justifyContent: 'center', marginTop: 20, paddingHorizontal: 20 }}>
-        <AppText
-          h25
-          bold
-          text={'Tips for a better world'}
-          color={colors.primary}
-          style={{ marginBottom: 7 }}
-        />
+        <View
+          style={{ flex: 0.95, justifyContent: 'center', marginTop: 20, paddingHorizontal: 20 }}>
+          <AppText
+            h25
+            bold
+            text={'Tips for a better world'}
+            color={colors.primary}
+            style={{ marginBottom: 7 }}
+          />
 
-        <ScrollView horizontal>
-          <View style={styles.tipContainer}>
-            <AnimatedLottieView source={SHOPPING_LOTTIE} />
-            <AppText
-              h1
-              bold
-              color={colors.green}
-              text={tips[0].title}
-              style={{ textAlign: 'center' }}
-            />
+          <ScrollView horizontal>
+            <TouchableOpacity style={styles.tipContainer} onPress={() => setModalVisible(true)}>
+              <AnimatedLottieView
+                source={SHOPPING_LOTTIE}
+                loop
+                autoPlay
+                style={{ width: 150, height: 150 }}
+              />
+              <AppText
+                h1
+                bold
+                color={colors.green}
+                text={tips[0].title}
+                style={{ textAlign: 'center' }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.tipContainer}>
+              <AppText
+                h1
+                bold
+                color={colors.green}
+                text={tips[1].title}
+                style={{ textAlign: 'center' }}
+              />
+              <AnimatedLottieView
+                source={RECYCLING_LOTTIE}
+                loop
+                autoPlay
+                style={{ width: 150, height: 150 }}
+              />
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
+        <Modal animationType="slide" transparent={false} visible={modalVisible}>
+          <View style={{ position: 'absolute', top: 40, left: 20, zIndex: 9000 }}>
+            <TouchableOpacity
+              onPress={() => setModalVisible(false)}
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: colors.lightGreen,
+              }}>
+              <MaterialCommunityIcons name="chevron-left" size={50} color={colors.secondary} />
+            </TouchableOpacity>
           </View>
-          <View style={styles.tipContainer}>
-            <AppText
-              h1
-              bold
-              color={colors.green}
-              text={tips[1].title}
-              style={{ textAlign: 'center' }}
-            />
-          </View>
-        </ScrollView>
-      </View>
-    </AppScreen>
+
+          <ShopWiselyScreen setModalVisible={setModalVisible} />
+        </Modal>
+      </AppScreen>
+    </>
   );
 };
 

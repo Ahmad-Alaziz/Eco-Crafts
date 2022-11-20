@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   FlatList,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -51,7 +52,7 @@ function AppPicker({
       <TouchableWithoutFeedback onPress={() => setModelVisible(true)}>
         <View style={[styles.container, { width }]}>
           {selectedItems.length ? (
-            <View style={{ flex: 1, flexDirection: 'column' }}>
+            <ScrollView showsVerticalScrollIndicator style={{ flex: 1, flexDirection: 'column' }}>
               {selectedItems.map((selectedItem) => {
                 return (
                   <View
@@ -66,7 +67,7 @@ function AppPicker({
                   </View>
                 );
               })}
-            </View>
+            </ScrollView>
           ) : (
             <AppText h3 style={styles.placeholder} text={placeholder} />
           )}
@@ -119,7 +120,7 @@ function AppPicker({
 
 const styles = StyleSheet.create({
   container: {
-    maxHeight: 150,
+    maxHeight: 100,
     backgroundColor: colors.lightGreen,
     borderRadius: 20,
     padding: 15,

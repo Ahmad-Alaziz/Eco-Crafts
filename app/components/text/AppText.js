@@ -42,7 +42,7 @@ function AppText({
         big && { fontSize: scale(50) },
         h1 && { fontSize: scale(25) },
         h2 && { fontSize: scale(20) },
-        h25 && { fontSize: scale(16) },
+        h25 && { fontSize: scale(18) },
         h3 && { fontSize: scale(14) },
         h4 && { fontSize: scale(12) },
         h5 && { fontSize: scale(10) },

@@ -4,3 +4,4 @@ export { default as OnboardingScreen } from './auth/OnboardingScreen';
 
 // home
 export { default as DashboardScreen } from './home/DashboardScreen';
+export { default as ShopWiselyScreen } from './home/ShopWiselyScreen';

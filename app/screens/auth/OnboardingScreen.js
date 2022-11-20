@@ -51,7 +51,12 @@ const OnboardingScreen = ({ navigation }) => {
           title: <AppText h1 bold color={colors.secondary} text={mockTitle} />,
           subtitle: <AppText h3 light style={styles.subTitle} text={mockSubTitle} />,
           image: (
-            <AnimatedLottieView source={ISO_LOTTIE} style={styles.lottieContainer} loop autoPlay />
+            <AnimatedLottieView
+              source={ISO_LOTTIE}
+              style={{ width: 240, height: 240 }}
+              loop
+              autoPlay
+            />
           ),
         },
 
