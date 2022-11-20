@@ -35,7 +35,8 @@ const WelcomeScreen = ({ navigation }) => {
         <AppButton
           text="Start"
           onPress={() => navigation.navigate(routeNames.HOME_NAV)}
-          style={{ backgroundColor: colors.secondary, color: colors.primary, width: 250 }}
+          textStyle={{ color: colors.primary }}
+          style={{ backgroundColor: colors.secondary, width: 250 }}
         />
       </View>
     </AppScreen>

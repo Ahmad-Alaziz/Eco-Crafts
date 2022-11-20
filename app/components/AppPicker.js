@@ -20,11 +20,12 @@ function AppPicker({
   icon,
   onSelectItem,
   PickerItemComponent = AppPickerItem,
-  selectedItem,
+  selectedItems,
   placeholder,
   numOfColumns = 3,
   width = '100%',
 }) {
+  console.log('items', items);
   const [modelVisible, setModelVisible] = useState(false);
 
   const [query, setQuery] = useState('');
@@ -33,7 +34,7 @@ function AppPicker({
 
   useEffect(() => {
     setData(items);
-  }, []);
+  }, [items]);
 
   const searchFilterFunction = (query) => {
     setQuery(query);
@@ -44,20 +45,28 @@ function AppPicker({
     setFilteredData(filteredData);
   };
 
+  console.log('selectedIytems', selectedItems);
   return (
     <>
       <TouchableWithoutFeedback onPress={() => setModelVisible(true)}>
         <View style={[styles.container, { width }]}>
-          {icon && (
-            <MaterialCommunityIcons name={icon} style={styles.icon} size={20} color={colors.grey} />
-          )}
-          {selectedItem ? (
-            <AppText
-              h3
-              bold
-              style={styles.text}
-              text={selectedItem.value ? selectedItem.value : selectedItem.text}
-            />
+          {selectedItems.length ? (
+            <View style={{ flex: 1, flexDirection: 'column' }}>
+              {selectedItems.map((selectedItem) => {
+                return (
+                  <View
+                    key={selectedItem.id}
+                    style={{
+                      height: 30,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <AppText h3 bold style={styles.text} text={selectedItem.text} />
+                    <AppText h3 bold style={styles.text} text={' x' + selectedItem.quantity} />
+                  </View>
+                );
+              })}
+            </View>
           ) : (
             <AppText h3 style={styles.placeholder} text={placeholder} />
           )}
@@ -70,6 +79,7 @@ function AppPicker({
           style={{
             backgroundColor: colors.secondary,
             alignItems: 'center',
+            justifyContent: 'center',
             flex: 1,
           }}>
           <AppButton text="Close" onPress={() => setModelVisible(false)} style={styles.closeBtn} />
@@ -89,14 +99,13 @@ function AppPicker({
             data={filteredData && filteredData.length > 0 ? filteredData : data}
             keyExtractor={(item) => item.id.toString()}
             numColumns={numOfColumns}
+            columnWrapperStyle={styles.row}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) => (
               <PickerItemComponent
-                icon={item.icon}
                 item={item}
                 label={item.text}
                 onPress={() => {
-                  setModelVisible(false);
                   onSelectItem(item);
                 }}
               />
@@ -110,12 +119,13 @@ function AppPicker({
 
 const styles = StyleSheet.create({
   container: {
+    maxHeight: 150,
     backgroundColor: colors.lightGreen,
-    alignItems: 'center',
     borderRadius: 20,
-    flexDirection: 'row',
     padding: 15,
     marginHorizontal: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   icon: {
     marginRight: 10,
@@ -124,8 +134,7 @@ const styles = StyleSheet.create({
 
   text: {
     flex: 1,
-    color: colors.primary,
-    textAlign: 'center',
+    color: colors.secondary,
   },
 
   searchBar: {
@@ -133,13 +142,17 @@ const styles = StyleSheet.create({
   },
 
   placeholder: {
-    color: colors.primary,
+    color: colors.secondary,
     flex: 1,
   },
 
   closeBtn: {
     width: '30%',
     backgroundColor: colors.lightGreen,
+  },
+  row: {
+    flex: 1,
+    justifyContent: 'space-around',
   },
 });
 

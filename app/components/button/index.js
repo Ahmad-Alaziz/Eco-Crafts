@@ -4,13 +4,13 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import AppText from '../text/AppText';
 
-const AppButton = ({ text, onPress, color = colors.primary, disabled, style }) => {
+const AppButton = ({ text, onPress, color = colors.primary, disabled, style, textStyle }) => {
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor: color }, style]}
       onPress={onPress}
       disabled={disabled}>
-      <AppText text={text} h3 bold style={styles.text} />
+      <AppText text={text} h3 bold style={[styles.text, textStyle]} />
     </TouchableOpacity>
   );
 };
@@ -29,6 +29,6 @@ const styles = StyleSheet.create({
   },
   text: {
     textTransform: 'uppercase',
-    color: colors.black,
+    color: colors.secondary,
   },
 });

@@ -1,11 +1,15 @@
 import { colors } from '@colors';
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-const AppScreen = ({ children, style, wave }) => {
+const AppScreen = ({ children, style, wave, notPadded }) => {
   return (
     <>
-      <SafeAreaView style={[styles.screen, style]}>{children}</SafeAreaView>
+      {notPadded ? (
+        <View style={[styles.screen, style]}>{children}</View>
+      ) : (
+        <SafeAreaView style={[styles.screen, style]}>{children}</SafeAreaView>
+      )}
     </>
   );
 };
