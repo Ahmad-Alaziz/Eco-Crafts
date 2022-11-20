@@ -4,7 +4,7 @@
 
 <!-- Begin: Purpose -->
 
-The Purpose of this app is to ...
+Using Eco Crafts you are able to reuse materials that are lying around you to create cool craft ideas that you can enjoy and inturn reducing the amount of waste that will need to be recycled or sent to landfills and incinerators
 <!-- End: Purpose -->
 
 ## How to use this repository
