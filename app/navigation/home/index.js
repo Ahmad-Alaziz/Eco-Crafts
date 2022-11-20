@@ -35,9 +35,14 @@ const HomeNavigator = () => {
         options={() => ({
           labelStyle: { margin: 5 },
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="account" size={27} color={color} style={styles.icon} />
+            <MaterialCommunityIcons
+              name="account-group"
+              size={27}
+              color={color}
+              style={styles.icon}
+            />
           ),
-          tabBarLabel: 'Dashboard2',
+          tabBarLabel: 'Community Posts',
         })}
       />
     </Tab.Navigator>

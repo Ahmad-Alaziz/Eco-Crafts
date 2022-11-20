@@ -22,20 +22,17 @@ function AppPicker({
   onSelectItem,
   PickerItemComponent = AppPickerItem,
   selectedItems,
+  setSelectedItems,
+  resetItems,
   placeholder,
   numOfColumns = 3,
   width = '100%',
 }) {
-  console.log('items', items);
   const [modelVisible, setModelVisible] = useState(false);
 
   const [query, setQuery] = useState('');
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-
-  useEffect(() => {
-    setData(items);
-  }, [items]);
 
   const searchFilterFunction = (query) => {
     setQuery(query);
@@ -46,28 +43,24 @@ function AppPicker({
     setFilteredData(filteredData);
   };
 
-  console.log('selectedIytems', selectedItems);
+  useEffect(() => {
+    setData(items);
+  }, [items, selectedItems, searchFilterFunction]);
+
+  const isItemSelected = (item) => {
+    return !!selectedItems.find(({ id }) => item.id === id);
+  };
+
   return (
     <>
       <TouchableWithoutFeedback onPress={() => setModelVisible(true)}>
         <View style={[styles.container, { width }]}>
           {selectedItems.length ? (
-            <ScrollView showsVerticalScrollIndicator style={{ flex: 1, flexDirection: 'column' }}>
-              {selectedItems.map((selectedItem) => {
-                return (
-                  <View
-                    key={selectedItem.id}
-                    style={{
-                      height: 30,
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <AppText h3 bold style={styles.text} text={selectedItem.text} />
-                    <AppText h3 bold style={styles.text} text={' x' + selectedItem.quantity} />
-                  </View>
-                );
-              })}
-            </ScrollView>
+            <AppText
+              h3
+              style={styles.placeholder}
+              text={selectedItems[0].text + '   x' + selectedItems[0].quantity + '  ... etc'}
+            />
           ) : (
             <AppText h3 style={styles.placeholder} text={placeholder} />
           )}
@@ -83,7 +76,22 @@ function AppPicker({
             justifyContent: 'center',
             flex: 1,
           }}>
-          <AppButton text="Close" onPress={() => setModelVisible(false)} style={styles.closeBtn} />
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
+            <AppButton
+              text="Close"
+              onPress={() => setModelVisible(false)}
+              style={styles.closeBtn}
+            />
+            <AppButton
+              text="Clear Selected"
+              onPress={() => {
+                setSelectedItems([]);
+                resetItems();
+              }}
+              style={styles.clearBtn}
+              textStyle={{ color: colors.primary }}
+            />
+          </View>
 
           <View style={styles.searchBar}>
             <AppTextInput
@@ -105,6 +113,7 @@ function AppPicker({
             renderItem={({ item }) => (
               <PickerItemComponent
                 item={item}
+                selected={isItemSelected(item)}
                 label={item.text}
                 onPress={() => {
                   onSelectItem(item);
@@ -148,8 +157,15 @@ const styles = StyleSheet.create({
   },
 
   closeBtn: {
-    width: '30%',
+    width: '20%',
+    backgroundColor: colors.primary,
+    marginRight: 25,
+  },
+  clearBtn: {
+    width: '55%',
     backgroundColor: colors.lightGreen,
+    color: colors.primary,
+    marginRight: 0,
   },
   row: {
     flex: 1,

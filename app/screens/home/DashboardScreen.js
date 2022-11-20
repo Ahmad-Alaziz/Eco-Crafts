@@ -1,26 +1,27 @@
 import { colors } from '@colors';
 import { AppScreen } from '@components';
-import routeNames from '@routeNames';
 import { AppButton, AppText } from 'app/components';
 import AppPicker from 'app/components/AppPicker';
-import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SHOPPING_LOTTIE from '@lottie/shopping.json';
 import RECYCLING_LOTTIE from '@lottie/recycling.json';
 
 import {
-  FlatList,
+  Alert,
   ImageBackground,
   Modal,
   ScrollView,
   StyleSheet,
-  TouchableHighlight,
   TouchableOpacity,
   View,
 } from 'react-native';
 import AnimatedLottieView from 'lottie-react-native';
 import ShopWiselyScreen from './ShopWiselyScreen';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import RecycleScreen from './RecycleScreen';
+import Tutorial from './Tutorial';
+import { collection, getDocs, onSnapshot } from 'firebase/firestore';
+import { db, getTutorials } from 'app/components/firebase';
 
 const startItems = [
   {
@@ -63,12 +64,68 @@ const tips = [
   { id: 0, title: 'Shop Wisely!' },
   { id: 1, title: 'Recycling 101' },
 ];
+
 const DashboardScreen = ({ navigation }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [items, setItems] = useState(startItems);
+  const [currentTutorial, setCurrentTutorial] = useState({});
+
+  console.log('sleected', selectedItems);
+  const getTutorial = async () => {
+    return await getTutorials().then(async (tutorials) => {
+      let finalTut;
+      await tutorials.map((tutorial) => {
+        console.log('tuorial', tutorial);
+        tutorial.materials.map(async (material) => {
+          console.log('hey', material);
+          const el = await selectedItems.find(({ text }) =>
+            text.toUpperCase().includes(material.toUpperCase())
+          );
+          if (el) {
+            console.log('Found!');
+            finalTut = tutorial;
+          }
+        });
+      });
+      console.log('finalTut', finalTut);
+      if (!finalTut) {
+        return 'none';
+      }
+      if (finalTut && finalTut.materials.length > selectedItems.length) {
+        return { ...finalTut, closest: true };
+      }
+
+      return finalTut;
+    });
+  };
+
+  const generate = async () => {
+    await getTutorial().then((tut) => {
+      console.log('tut', tut);
+
+      if (tut === 'none') {
+        Alert.alert(
+          "Sorry! we couldn't find a tutorial with your selected materials, try selecting others!"
+        );
+      }
+
+      if (typeof tut === 'object' && !tut?.closest) {
+        setCurrentTutorial(tut);
+        setTutorialModalVisible(true);
+      }
+
+      if (tut?.closest) {
+        Alert.alert(
+          "Unfortunately we didn't find a tutorial with your exact materials, but here is the closest one to that!"
+        );
+        setCurrentTutorial(tut);
+        setTutorialModalVisible(true);
+        console.log('this is the closest');
+      }
+    });
+  };
 
   const updateState = (objects, setObjects, id) => {
-    console.log('id', id);
     const newState = objects.map((obj) => {
       if (obj.id === id) {
         return { ...obj, quantity: obj.quantity + 1 };
@@ -81,7 +138,23 @@ const DashboardScreen = ({ navigation }) => {
     setObjects(newState);
   };
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const [shoppingModalVisible, setShoppingModalVisible] = useState(false);
+  const [recycleModalVisible, setRecycleModalVisible] = useState(false);
+  const [tutorialModalVisible, setTutorialModalVisible] = useState(false);
+
+  /**
+   *  
+
+  
+   */
+
+  useEffect(() => {
+    getTutorials().then((snap) => {});
+  }, []);
+
+  const resetItems = () => {
+    setItems(startItems);
+  };
 
   return (
     <>
@@ -106,7 +179,7 @@ const DashboardScreen = ({ navigation }) => {
             style={{ marginVertical: 10 }}
             text="Pick whatever materials you have laying around your house and our magical generator will come up with a fascinating DIY project for you to enjoy!"
           />
-          <View style={{ width: 300, alignItems: 'center' }}>
+          <View style={{ width: 350, alignItems: 'center' }}>
             <View style={{ marginVertical: 10 }}>
               <AppPicker
                 onSelectItem={(item) => {
@@ -119,16 +192,21 @@ const DashboardScreen = ({ navigation }) => {
 
                   updateState(items, setItems, item.id);
                 }}
+                setSelectedItems={setSelectedItems}
                 placeholder="Choose Materials"
                 selectedItems={selectedItems}
                 items={items}
+                resetItems={resetItems}
+                startItems={startItems}
+                setItems={setItems}
               />
             </View>
           </View>
           <AppButton
             text="Generate!"
+            onPress={() => generate()}
             color={colors.lightGreen}
-            style={{ width: 250, position: 'absolute', bottom: 20, left: 60 }}
+            style={{ width: 250, position: 'absolute', bottom: 10, left: 60 }}
           />
         </View>
         <View
@@ -142,7 +220,9 @@ const DashboardScreen = ({ navigation }) => {
           />
 
           <ScrollView horizontal>
-            <TouchableOpacity style={styles.tipContainer} onPress={() => setModalVisible(true)}>
+            <TouchableOpacity
+              style={styles.tipContainer}
+              onPress={() => setShoppingModalVisible(true)}>
               <AnimatedLottieView
                 source={SHOPPING_LOTTIE}
                 loop
@@ -157,7 +237,9 @@ const DashboardScreen = ({ navigation }) => {
                 style={{ textAlign: 'center' }}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.tipContainer}>
+            <TouchableOpacity
+              style={styles.tipContainer}
+              onPress={() => setRecycleModalVisible(true)}>
               <AppText
                 h1
                 bold
@@ -174,10 +256,10 @@ const DashboardScreen = ({ navigation }) => {
             </TouchableOpacity>
           </ScrollView>
         </View>
-        <Modal animationType="slide" transparent={false} visible={modalVisible}>
+        <Modal animationType="slide" transparent={false} visible={shoppingModalVisible}>
           <View style={{ position: 'absolute', top: 40, left: 20, zIndex: 9000 }}>
             <TouchableOpacity
-              onPress={() => setModalVisible(false)}
+              onPress={() => setShoppingModalVisible(false)}
               style={{
                 width: 50,
                 height: 50,
@@ -190,7 +272,45 @@ const DashboardScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-          <ShopWiselyScreen setModalVisible={setModalVisible} />
+          <ShopWiselyScreen />
+        </Modal>
+
+        <Modal animationType="slide" transparent={false} visible={recycleModalVisible}>
+          <View style={{ position: 'absolute', top: 40, left: 20, zIndex: 9000 }}>
+            <TouchableOpacity
+              onPress={() => setRecycleModalVisible(false)}
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: colors.lightGreen,
+              }}>
+              <MaterialCommunityIcons name="chevron-left" size={50} color={colors.secondary} />
+            </TouchableOpacity>
+          </View>
+
+          <RecycleScreen />
+        </Modal>
+
+        <Modal animationType="slide" transparent={false} visible={tutorialModalVisible}>
+          <View style={{ position: 'absolute', top: 40, left: 20, zIndex: 9000 }}>
+            <TouchableOpacity
+              onPress={() => setTutorialModalVisible(false)}
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: colors.lightGreen,
+              }}>
+              <MaterialCommunityIcons name="chevron-left" size={50} color={colors.secondary} />
+            </TouchableOpacity>
+          </View>
+
+          <Tutorial tut={currentTutorial} />
         </Modal>
       </AppScreen>
     </>
@@ -199,13 +319,13 @@ const DashboardScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    flex: 1.5,
+    flex: 1.15,
     backgroundColor: colors.primary,
     width: '100%',
     borderBottomStartRadius: 50,
     borderBottomEndRadius: 50,
     padding: 20,
-    paddingTop: 80,
+    paddingTop: 100,
     overflow: 'hidden',
   },
   tipContainer: {

@@ -1,24 +1,13 @@
 import { colors } from '@colors';
 import { AppScreen } from '@components';
-import routeNames from '@routeNames';
-import { AppButton, AppText } from 'app/components';
-import AppPicker from 'app/components/AppPicker';
-import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import SHOPPING_LOTTIE from '@lottie/grocery.json';
+import { AppText } from 'app/components';
+import React from 'react';
+import SHOPPING_LOTTIE from '@lottie/recycling.json';
 
-import {
-  ImageBackground,
-  Modal,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
 import AnimatedLottieView from 'lottie-react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const ShopWiselyScreen = ({ navigation }) => {
+const RecycleScreen = ({ navigation }) => {
   return (
     <AppScreen style={{ backgroundColor: colors.white }}>
       <View style={styles.cardContainer}>
@@ -44,28 +33,28 @@ const ShopWiselyScreen = ({ navigation }) => {
       </View>
       <ScrollView style={{ paddingHorizontal: 15 }}>
         <View style={styles.tipContainer}>
-          <AppText h25 bold text={'Buy Local'} color={colors.primary} />
+          <AppText h25 bold text={'Location Dependent?'} color={colors.primary} />
           <AppText
             h3
-            text="Shopping locally means your money stays in the community, reduces waste from all that parcel and delivery packaging and helps the circular economy."
+            text="The only way to know for sure what is recycled in your town or city or county is to do your research.  There are certain items that are pretty much ubiquitously OK, like PET #1 bottles (water and soda bottles) but many items vary from place to place."
             color={colors.green}
             style={{ paddingTop: 10 }}
           />
         </View>
         <View style={styles.tipContainer}>
-          <AppText h25 bold text={'Buy Less, Buy Better!'} color={colors.primary} />
+          <AppText h25 bold text={'Learn your numbers!'} color={colors.primary} />
           <AppText
             h3
-            text="Buy less stuff! Rising demands for raw materials to make these things – like oil, metals and water – are damaging the environment. Don’t buy new clothes or gifts unless you think you or the personally receiving them will really love it."
+            text="Wait, what’s PET (or PETE) #1? Start by learning your numbers. Some plastics are worse than others (for the environment, or for human health or both). And some are easily recycled and some are not. Learn which ones are the worst AND which are recyclable near you. You can only learn what to avoid and what to recycle if you understand what the numbers inside the recycling symbol mean."
             color={colors.green}
             style={{ paddingTop: 10 }}
           />
         </View>
         <View style={styles.tipContainer}>
-          <AppText h25 bold text="Do some brand research" color={colors.primary} />
+          <AppText h25 bold text="Be Realistic" color={colors.primary} />
           <AppText
             h3
-            text="Do some brand research, even if it is just the brand website, to get a feel for how the company you are buying from run their business. If you can afford it, try shopping somewhere with good sustainable business practices."
+            text="No wishcycling, ok? Don’t just throw everything in the bin and hope for the best. Somewhere between 16% – 25% of what we are putting in the bins is not recyclable. When we do this we contaminate waste streams and junk up recycling machinery"
             color={colors.green}
             style={{ paddingTop: 10 }}
           />
@@ -101,4 +90,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ShopWiselyScreen;
+export default RecycleScreen;
